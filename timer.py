@@ -11,28 +11,40 @@ state = {
 	"mode" : 0,
 	"sound_index": 0,
 	}
-def main():
+
+def start():
 	message =""" <<<<<<<<<< OPTIONS >>>>>>>>>>
 	(1): Timer Mode
-	(2): Select Sound"""
+	(2): Select Sound
+	(3): Exit"""
 	print(message)
 	state["mode"] = int(input("Enter your choice: "))
 	if(state["mode"] == 1):
 		timer()
 	elif(state["mode"] == 2):
 		choose_beep()
+	elif(state["mode" == 3]):
+		quit()
+	else:
+		print('Please enter proper Mode.')
+	start()
 
 def timer():
-	state["minutes"] = int(input("Enter number of minute(s) to start: "))
-	iMins = 0
-	if state["minutes"] > 0:
-		print("Minutes completed: ", end = "")
-		while iMins != state["minutes"]:
-		    print(iMins, end=" ")
-		    time.sleep(60)
-		    iMins += 1
-		playsound('./beeps/'+state["sound_list"][state["sound_index"]])
-		Mbox('Timer', str(state["minutes"])+' minute(s) are completed.', 1)
+	try:
+		state["minutes"] = int(input("Enter number of minute(s) to start: "))
+		iMins = 0
+		if state["minutes"] <= 0:
+			raise ValueError('Please provide positive values.')
+		elif state["minutes"] > 0:
+			print("Minutes completed: ", end = "")
+			while iMins != state["minutes"]:
+				print(iMins, end=" ")
+				time.sleep(60)
+				iMins += 1
+			playsound('./beeps/'+state["sound_list"][state["sound_index"]])
+			Mbox('Timer', str(state["minutes"])+' minute(s) are completed.', 1)
+	except:
+		print("Please enter proper numeric value.")
 
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
@@ -45,19 +57,17 @@ def on_press(key):
 	elif (key == Key.left):
 		state["sound_index"] = (l-1) if (state["sound_index"]-1 < 0) else (state["sound_index"]-1)
 		playsound('./beeps/'+state["sound_list"][state["sound_index"]])
-	elif (key == Key.esc):
+	elif (key == Key.space):
 		return False
 
 def choose_beep():
+	message="""<<<<<<<<<< INSTRUCTIONS >>>>>>>>>>
+- Use Left and Right arrow keys to navigate.
+- Press Escape to select the current sound."""
+	print(message)
+	print('./beeps/'+state["sound_list"][state["sound_index"]])
 	with Listener(
         on_press=on_press,
         on_release=None) as listener:
 		listener.join()
-	message="""<<<<<<<<<< INSTRUCTIONS >>>>>>>>>>
-- Use Left and Right arrow keys to navigate.
-- Press Enter to select the current sound."""
-	print(message)
-	print('./beeps/'+state["sound_list"][state["sound_index"]])
-	main()
-
-main()
+start()
