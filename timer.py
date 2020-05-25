@@ -1,6 +1,7 @@
 import time
 import ctypes
 import os
+from easygui import msgbox
 from playsound import playsound
 from pynput.keyboard import Key, Listener
 
@@ -23,7 +24,7 @@ def start():
 		timer()
 	elif(state["mode"] == 2):
 		choose_beep()
-	elif(state["mode" == 3]):
+	elif(state["mode"] == 3):
 		quit()
 	else:
 		print('Please enter proper Mode.')
@@ -36,18 +37,14 @@ def timer():
 		if state["minutes"] <= 0:
 			raise ValueError('Please provide positive values.')
 		elif state["minutes"] > 0:
-			print("Minutes completed: ", end = "")
 			while iMins != state["minutes"]:
 				print(iMins, end=" ")
 				time.sleep(60)
 				iMins += 1
 			playsound('./beeps/'+state["sound_list"][state["sound_index"]])
-			Mbox('Timer', str(state["minutes"])+' minute(s) are completed.', 1)
+			msgbox('{} minute(s) are completed.'.format(state["minutes"]))
 	except:
 		print("Please enter proper numeric value.")
-
-def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 def on_press(key):
 	l = len(state["sound_list"])
