@@ -19,15 +19,18 @@ def start():
 	(2): Select Sound
 	(3): Exit"""
 	print(message)
-	state["mode"] = int(input("Enter your choice: "))
-	if(state["mode"] == 1):
-		timer()
-	elif(state["mode"] == 2):
-		choose_beep()
-	elif(state["mode"] == 3):
-		quit()
-	else:
-		print('Please enter proper Mode.')
+	try:
+		state["mode"] = int(input("Enter your choice: "))
+		if(state["mode"] == 1):
+			timer()
+		elif(state["mode"] == 2):
+			choose_beep()
+		elif(state["mode"] == 3):
+			quit()
+		else:
+			print('Please enter proper Mode.')
+	except Exception as e:
+		print(e)
 	start()
 
 def timer():
@@ -38,7 +41,7 @@ def timer():
 			raise ValueError('Please provide positive values.')
 		elif state["minutes"] > 0:
 			while iMins != state["minutes"]:
-				print(iMins, end=" ")
+				print(iMins)
 				time.sleep(60)
 				iMins += 1
 			playsound('./beeps/'+state["sound_list"][state["sound_index"]])
@@ -62,7 +65,6 @@ def choose_beep():
 - Use Left and Right arrow keys to navigate.
 - Press Escape to select the current sound."""
 	print(message)
-	print('./beeps/'+state["sound_list"][state["sound_index"]])
 	with Listener(
         on_press=on_press,
         on_release=None) as listener:
